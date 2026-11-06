@@ -1,6 +1,6 @@
 # SAA Sprint — AWS Solutions Architect Associate (SAA-C03) in 5 days
 
-A Duolingo-style study app for the **AWS Certified Solutions Architect – Associate (SAA-C03)** exam. Built for people with a full-time job and a few evenings to prepare.
+A study app for the **AWS Certified Solutions Architect – Associate (SAA-C03)** exam. Built for people with a full-time job and a few evenings to prepare.
 
 The hard part of SAA-C03 isn't the services. It's that every option sounds right and two are nearly identical: SQS standard or FIFO, CloudFront or Global Accelerator, EFS or FSx, Multi-AZ or read replica, pilot light or warm standby. This app drills exactly those decisions.
 
