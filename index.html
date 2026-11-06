@@ -1,0 +1,845 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SAA-C03 Sprint</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Duolingo-style AWS Solutions Architect Associate (SAA-C03) prep: tricky mock questions with reasoning, confusing-pairs lab, trigger keywords, streaks and a 60-second drill.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+/* Layout: one phone-width column, chunky Duolingo-style pressable buttons, fixed bottom tab bar. */
+:root{
+  --bg:#EDF1F7; --surface:#FFFFFF; --ink:#0F1B2D; --muted:#55647A; --line:#D3DCE8; --chip:#E2E8F1;
+  --accent:#2457F5; --accent-deep:#1636A8; --accent-soft:#E2E9FF;
+  --good:#16A34A; --good-deep:#0F7A36; --good-soft:#DDF5E5;
+  --bad:#DC2626; --bad-deep:#A31B1B; --bad-soft:#FBE4E4;
+  --flame:#F97316;
+  --d-sec:#7C3AED; --d-res:#0284C7; --d-perf:#D97706; --d-cost:#059669;
+  --f-display:"Bricolage Grotesque", "Figtree", system-ui, sans-serif;
+  --f-body:"Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0A1120; --surface:#121B2E; --ink:#E7EDF6; --muted:#94A2B9; --line:#25324B; --chip:#1B2741;
+  --accent:#5B83FF; --accent-deep:#2E4CC0; --accent-soft:#1C2A52;
+  --good:#22C55E; --good-deep:#15803D; --good-soft:#0F2E1D;
+  --bad:#F05252; --bad-deep:#B42323; --bad-soft:#3A1717;
+  --flame:#FB923C;
+  --d-sec:#A78BFA; --d-res:#38BDF8; --d-perf:#FBBF24; --d-cost:#34D399;
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#0A1120; --surface:#121B2E; --ink:#E7EDF6; --muted:#94A2B9; --line:#25324B; --chip:#1B2741;
+  --accent:#5B83FF; --accent-deep:#2E4CC0; --accent-soft:#1C2A52;
+  --good:#22C55E; --good-deep:#15803D; --good-soft:#0F2E1D;
+  --bad:#F05252; --bad-deep:#B42323; --bad-soft:#3A1717;
+  --flame:#FB923C;
+  --d-sec:#A78BFA; --d-res:#38BDF8; --d-perf:#FBBF24; --d-cost:#34D399;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{min-height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 var(--f-body);-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.wrap{max-width:640px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 calc(96px + env(safe-area-inset-bottom,0px))}
+h1,h2,h3{font-family:var(--f-display);line-height:1.15;text-wrap:balance;margin:0}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:10px}
+
+/* top bar */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);display:flex;align-items:center;gap:10px;padding-block:14px 10px}
+.brand{font-family:var(--f-display);font-weight:800;font-size:20px;letter-spacing:-.01em;display:flex;align-items:center;gap:8px;flex:1;min-width:0}
+.brand .tag{font-family:var(--f-mono);font-size:11px;font-weight:700;background:var(--ink);color:var(--bg);padding:2px 6px;border-radius:6px;letter-spacing:.04em}
+.stat{display:flex;align-items:center;gap:5px;font-weight:700;font-family:var(--f-mono);font-size:14px;padding:6px 10px;border-radius:999px;background:var(--surface);border:1px solid var(--line)}
+.stat svg{width:16px;height:16px}
+.stat.flame{color:var(--flame)}
+.stat.xp{color:var(--accent)}
+
+/* generic */
+.stack{display:flex;flex-direction:column;gap:14px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:18px}
+.eyebrow{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.muted{color:var(--muted)}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.row.end{justify-content:flex-end}
+.btn{appearance:none;border:0;background:var(--accent);color:#fff;font-weight:700;font-size:16px;padding:14px 18px;border-radius:14px;box-shadow:0 4px 0 var(--accent-deep);transition:transform .06s, box-shadow .06s;text-align:center}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--accent-deep)}
+.btn:disabled{background:var(--chip);color:var(--muted);box-shadow:0 4px 0 var(--line);cursor:not-allowed}
+.btn.wide{width:100%}
+.btn.good{background:var(--good);box-shadow:0 4px 0 var(--good-deep)}
+.btn.bad{background:var(--bad);box-shadow:0 4px 0 var(--bad-deep)}
+.btn.soft{background:var(--surface);color:var(--ink);border:2px solid var(--line);box-shadow:0 4px 0 var(--line)}
+.ghost{background:none;border:0;color:var(--muted);font-weight:600;padding:6px 4px}
+
+/* home */
+.hero{background:var(--accent);color:#fff;border:0;position:relative;overflow:hidden}
+.hero .eyebrow{color:rgba(255,255,255,.75)}
+.hero h1{font-size:28px;margin-top:6px}
+.hero p{margin:8px 0 16px;color:rgba(255,255,255,.88);max-width:46ch}
+.hero .btn{background:#fff;color:var(--accent-deep);box-shadow:0 4px 0 rgba(0,0,0,.25)}
+.hero .grid-bg{position:absolute;inset:0;opacity:.13;pointer-events:none;background-image:linear-gradient(#fff 1px,transparent 1px),linear-gradient(90deg,#fff 1px,transparent 1px);background-size:22px 22px;mask-image:linear-gradient(120deg,transparent 40%,#000)}
+.hero > *:not(.grid-bg){position:relative}
+.facts{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.fact{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:10px 8px;text-align:center}
+.fact b{display:block;font-family:var(--f-mono);font-size:17px}
+.fact span{font-size:11px;color:var(--muted);font-weight:600}
+.ready{display:flex;align-items:center;gap:16px}
+.ring{width:84px;height:84px;flex:none}
+.ring text{font-family:var(--f-mono);font-weight:700;fill:var(--ink)}
+.dom{display:grid;grid-template-columns:1fr auto;gap:4px 10px;align-items:center}
+.dom + .dom{margin-top:12px}
+.dom .name{font-weight:600;font-size:14px;display:flex;align-items:center;gap:8px;min-width:0}
+.dom .dot{width:10px;height:10px;border-radius:3px;flex:none}
+.dom .pct{font-family:var(--f-mono);font-size:13px;color:var(--muted)}
+.meter{grid-column:1/-1;height:10px;border-radius:999px;background:var(--chip);overflow:hidden}
+.meter span{display:block;height:100%;border-radius:999px}
+.weak{font-size:11px;font-weight:700;color:var(--bad);background:var(--bad-soft);padding:1px 7px;border-radius:999px}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.tile{display:flex;flex-direction:column;align-items:flex-start;gap:4px;text-align:left;background:var(--surface);border:2px solid var(--line);border-radius:16px;padding:14px;box-shadow:0 4px 0 var(--line);transition:transform .06s,box-shadow .06s}
+.tile:active{transform:translateY(3px);box-shadow:0 1px 0 var(--line)}
+.tile b{font-size:15px}
+.tile span{font-size:13px;color:var(--muted);line-height:1.35}
+.tile .ic{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;margin-bottom:4px;color:#fff}
+.tile .ic svg{width:18px;height:18px}
+
+/* exam */
+.qhead{display:flex;align-items:center;gap:12px;padding-top:4px}
+.bar{flex:1;height:14px;background:var(--chip);border-radius:999px;overflow:hidden}
+.bar span{display:block;height:100%;background:var(--good);border-radius:999px;transition:width .3s}
+.timer{font-size:13px;color:var(--muted);text-align:right}
+.dchip{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:4px 10px;border-radius:999px;background:var(--chip)}
+.dchip i{width:8px;height:8px;border-radius:2px;display:block}
+.qtext{font-family:var(--f-body);font-weight:700;font-size:19px;line-height:1.4}
+.opts{display:flex;flex-direction:column;gap:10px}
+.opt{display:flex;gap:12px;align-items:flex-start;text-align:left;background:var(--surface);border:2px solid var(--line);border-radius:14px;padding:13px 14px;box-shadow:0 3px 0 var(--line);font-size:15px;line-height:1.4}
+.opt .let{font-family:var(--f-mono);font-weight:700;font-size:13px;border:2px solid var(--line);border-radius:8px;min-width:28px;height:28px;display:grid;place-items:center;flex:none}
+.opt.sel{border-color:var(--accent);background:var(--accent-soft);box-shadow:0 3px 0 var(--accent)}
+.opt.sel .let{border-color:var(--accent);color:var(--accent)}
+.opt.right{border-color:var(--good);background:var(--good-soft);box-shadow:0 3px 0 var(--good)}
+.opt.right .let{border-color:var(--good);color:var(--good)}
+.opt.wrong{border-color:var(--bad);background:var(--bad-soft);box-shadow:0 3px 0 var(--bad)}
+.opt.wrong .let{border-color:var(--bad);color:var(--bad)}
+.opt:disabled{cursor:default}
+.fb{border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:10px}
+.fb.good{background:var(--good-soft)}
+.fb.bad{background:var(--bad-soft)}
+.fb h3{font-size:20px}
+.fb.good h3{color:var(--good)}
+.fb.bad h3{color:var(--bad)}
+.kw{display:inline-block;font-family:var(--f-mono);font-size:12.5px;font-weight:700;background:var(--surface);border:1px dashed var(--muted);border-radius:8px;padding:4px 8px}
+.why{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.why li{display:grid;grid-template-columns:22px 1fr;gap:8px;font-size:14px;line-height:1.45}
+.why li b{display:block}
+.why .mk{font-family:var(--f-mono);font-weight:700;font-size:14px}
+.why .ok .mk{color:var(--good)}
+.why .no .mk{color:var(--bad)}
+.modes{display:flex;flex-direction:column;gap:12px}
+.mode{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;text-align:left;background:var(--surface);border:2px solid var(--line);border-radius:16px;padding:16px;box-shadow:0 4px 0 var(--line)}
+.mode:active{transform:translateY(3px);box-shadow:0 1px 0 var(--line)}
+.mode .ic{grid-row:span 2;width:40px;height:40px;border-radius:12px;display:grid;place-items:center;color:#fff}
+.mode .ic svg{width:22px;height:22px}
+.mode b{font-size:16px}
+.mode span{font-size:13.5px;color:var(--muted)}
+.mode:disabled{opacity:.5;cursor:not-allowed}
+.big{font-family:var(--f-display);font-weight:800;font-size:56px;line-height:1}
+.review details{border-top:1px solid var(--line);padding-block:12px}
+.review summary{cursor:pointer;display:grid;grid-template-columns:22px 1fr;gap:8px;font-weight:600;font-size:14.5px;list-style:none}
+.review summary::-webkit-details-marker{display:none}
+.review .body{padding:10px 0 0 30px;display:flex;flex-direction:column;gap:10px}
+
+/* lab */
+.seg{display:grid;grid-template-columns:1fr 1fr;background:var(--chip);border-radius:14px;padding:4px;gap:4px}
+.seg button{border:0;background:none;padding:10px;border-radius:10px;font-weight:700;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:0 2px 0 var(--line)}
+.pair{background:var(--surface);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.pair summary{padding:14px 16px;cursor:pointer;font-weight:700;display:flex;justify-content:space-between;align-items:center;gap:10px;list-style:none}
+.pair summary::-webkit-details-marker{display:none}
+.pair summary::after{content:"+";font-family:var(--f-mono);font-size:20px;color:var(--muted)}
+.pair[open] summary::after{content:"−"}
+.pair .sub{font-weight:500;font-size:13px;color:var(--muted);display:block}
+.tblwrap{overflow-x:auto;border-top:1px solid var(--line)}
+table{border-collapse:collapse;width:100%;font-size:13.5px;min-width:520px}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);background:var(--bg)}
+td:first-child{font-weight:700;white-space:nowrap}
+.tip{padding:12px 16px;font-size:13.5px;background:var(--accent-soft);display:flex;gap:8px}
+.tip b{color:var(--accent);flex:none}
+.search{width:100%;font:inherit;padding:12px 14px;border-radius:14px;border:2px solid var(--line);background:var(--surface);color:var(--ink)}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px}
+.flip{min-height:104px;border-radius:14px;border:2px solid var(--line);background:var(--surface);box-shadow:0 3px 0 var(--line);padding:12px;text-align:left;display:flex;flex-direction:column;justify-content:space-between;gap:8px}
+.flip .k{font-weight:600;font-size:14px;line-height:1.35}
+.flip .a{font-family:var(--f-mono);font-weight:700;font-size:13px;color:var(--muted)}
+.flip.on{border-color:var(--good);box-shadow:0 3px 0 var(--good)}
+.flip.on .a{color:var(--good)}
+.progress-line{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);font-weight:600}
+
+/* drill */
+.drill-k{font-family:var(--f-display);font-weight:800;font-size:26px;text-align:center;min-height:3.4em;display:grid;place-items:center;text-wrap:balance}
+.drill-opts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.drill-opts .opt{justify-content:center;text-align:center;min-height:64px;align-items:center;font-weight:600}
+.clock{height:10px;background:var(--chip);border-radius:999px;overflow:hidden}
+.clock span{display:block;height:100%;background:var(--flame)}
+
+/* plan */
+.day h3{font-size:19px}
+.day .focus{font-size:13px;color:var(--muted);margin:2px 0 10px}
+.check{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-top:1px solid var(--line);font-size:14.5px;cursor:pointer}
+.check input{width:20px;height:20px;accent-color:var(--good);margin-top:2px;flex:none}
+.check.done span{color:var(--muted);text-decoration:line-through}
+.tactic{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:10px;padding:9px 0;border-top:1px solid var(--line);font-size:14px}
+.tactic b{font-family:var(--f-mono);font-size:13px}
+
+/* nav */
+.tabs{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--surface);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px);padding-left:env(safe-area-inset-left,0px);padding-right:env(safe-area-inset-right,0px)}
+.tabs .in{max-width:640px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr)}
+.tabs button{border:0;background:none;display:flex;flex-direction:column;align-items:center;gap:2px;padding:9px 0 10px;font-size:11.5px;font-weight:700;color:var(--muted)}
+.tabs svg{width:24px;height:24px}
+.tabs button[aria-current="page"]{color:var(--accent)}
+#confetti{position:fixed;inset:0;pointer-events:none;z-index:50;width:100%;height:100%}
+.toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:12px;font-weight:700;font-size:14px;z-index:40}
+@media (max-width:420px){.facts{grid-template-columns:repeat(2,1fr)}.hero h1{font-size:24px}.big{font-size:46px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand">SAA Sprint <span class="tag">C03</span></div>
+    <div class="stat flame" title="Day streak"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2c1 3.5 5 6 5 11a5 5 0 0 1-10 0c0-2.2 1-3.8 2.2-5 .2 1.6 1 2.6 2 3 0-3.5-.8-6.2.8-9z"/></svg><span id="stStreak">0</span></div>
+    <div class="stat xp" title="Total XP"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg><span id="stXp">0</span></div>
+  </header>
+
+  <main>
+    <section id="v-home" class="stack"></section>
+    <section id="v-exam" class="stack" hidden></section>
+    <section id="v-lab" class="stack" hidden></section>
+    <section id="v-drill" class="stack" hidden></section>
+    <section id="v-plan" class="stack" hidden></section>
+  </main>
+</div>
+
+<nav class="tabs" aria-label="Sections"><div class="in">
+  <button data-v="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11 12 4l9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Home</button>
+  <button data-v="exam"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="m9 12 2 2 4-4M9 7h6"/></svg>Practice</button>
+  <button data-v="lab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 1.8 3h10.4a2 2 0 0 0 1.8-3l-5-9V3"/><path d="M7.5 15h9"/></svg>Lab</button>
+  <button data-v="drill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2.5M10 2h4"/></svg>Drill</button>
+  <button data-v="plan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>5-day plan</button>
+</div></nav>
+<canvas id="confetti" aria-hidden="true"></canvas>
+
+<script>
+/* ==================== DATA ==================== */
+const DOM = {
+  sec:  {n:"Secure architectures",         w:30},
+  res:  {n:"Resilient architectures",      w:26},
+  perf: {n:"High-performing architectures",w:24},
+  cost: {n:"Cost-optimized architectures", w:20}
+};
+
+/* Each question: d=domain, q=stem, o=options, a=correct index, w=why each option is right/wrong, k=trigger keyword */
+const QUESTIONS = [
+{id:"q1",d:"res",q:"An order system must process each order exactly once and in the order received. Producers and consumers must be decoupled. What should the architect use?",
+ o:["Amazon SQS FIFO queue","Amazon SQS standard queue","Amazon SNS standard topic","Amazon Kinesis Data Streams with one consumer"],a:0,
+ w:["FIFO queues give strict ordering and exactly-once processing with deduplication.","Standard queues are at-least-once with best-effort ordering, so duplicates and reordering can happen.","SNS pushes to subscribers. A standard topic does not guarantee order or exactly-once delivery, and it does not buffer work.","Kinesis keeps order per shard, but consumers can see duplicate records. It is built for streaming analytics, not job queues."],
+ k:"exactly once + in order → SQS FIFO"},
+{id:"q2",d:"cost",q:"EC2 instances in a private subnet upload large files to Amazon S3 in the same Region through a NAT gateway. The NAT data processing charges are high. What is the most cost-effective fix?",
+ o:["Add an S3 gateway VPC endpoint and update the route table","Add an S3 interface VPC endpoint (PrivateLink)","Move the instances to a public subnet with an internet gateway","Replace the NAT gateway with a NAT instance"],a:0,
+ w:["Gateway endpoints for S3 have no hourly or data processing charge and keep traffic on the AWS network.","Interface endpoints work, but they bill per hour and per GB. The gateway endpoint is free.","This exposes instances to the internet and weakens security just to save cost.","A NAT instance still processes the traffic and adds management work and a single point of failure."],
+ k:"private subnet → S3, cheapest → gateway endpoint"},
+{id:"q3",d:"res",q:"A production Amazon RDS for PostgreSQL database must fail over automatically if the primary instance or its Availability Zone fails. What should be enabled?",
+ o:["RDS Multi-AZ deployment","A cross-Region read replica","Automated daily snapshots","A read replica in another AZ"],a:0,
+ w:["Multi-AZ keeps a synchronous standby in another AZ and fails over automatically, usually in 1 to 2 minutes.","Cross-Region replicas are for DR and read scaling. Promotion is manual.","Snapshots need a manual restore, which means a long outage and lost writes since the last snapshot.","Read replicas are asynchronous and must be promoted manually. They scale reads; they are not the HA answer."],
+ k:"automatic failover, same Region → Multi-AZ"},
+{id:"q4",d:"perf",q:"Analysts run heavy reporting queries against an Amazon RDS for MySQL database, slowing the web app that writes to it. Reports can tolerate a few seconds of lag. What should be done?",
+ o:["Create a read replica and point reporting at it","Enable Multi-AZ and send reports to the standby","Scale the DB instance up to a larger class","Add DynamoDB Accelerator (DAX)"],a:0,
+ w:["Read replicas offload read traffic asynchronously. A few seconds of lag is acceptable here.","In a Multi-AZ instance deployment the standby cannot serve reads. It exists only for failover.","A bigger instance helps briefly but does not isolate reporting from the app, and it costs more.","DAX is a cache for DynamoDB only. It does not work with RDS."],
+ k:"offload reads, lag OK → read replica"},
+{id:"q5",d:"cost",q:"Application logs are read often for 30 days, then almost never. They must be kept for 7 years, and retrieval within 48 hours is acceptable. What is the lowest-cost design?",
+ o:["S3 Standard, then a lifecycle rule to S3 Glacier Deep Archive after 30 days","S3 Intelligent-Tiering for all logs","S3 Standard-IA for the full 7 years","S3 One Zone-IA, then delete after 7 years"],a:0,
+ w:["Deep Archive is the cheapest class, and its standard (within 12 hours) or bulk (within 48 hours) retrieval meets the requirement.","Intelligent-Tiering suits unknown patterns. Here the pattern is known, so a lifecycle rule is cheaper and has no monitoring fee.","Standard-IA costs far more per GB than Deep Archive for data that is almost never read.","One Zone-IA keeps data in one AZ and still costs much more than Deep Archive over 7 years."],
+ k:"known pattern + 7-year archive + 48h OK → lifecycle to Deep Archive"},
+{id:"q6",d:"cost",q:"A data lake holds millions of objects with unpredictable, changing access patterns. The team wants to cut storage cost without retrieval fees or operational work. Which storage class fits?",
+ o:["S3 Intelligent-Tiering","S3 Standard-IA","S3 Glacier Flexible Retrieval","S3 One Zone-IA"],a:0,
+ w:["Intelligent-Tiering moves objects between access tiers automatically with no retrieval fees, for a small monitoring charge.","Standard-IA charges per-GB retrieval, which hurts when access is unpredictable.","Glacier Flexible Retrieval needs minutes to hours to restore and charges for retrieval.","One Zone-IA has retrieval fees and lower resilience. It suits re-creatable data only."],
+ k:"unknown / changing access → Intelligent-Tiering"},
+{id:"q7",d:"sec",q:"An application stores database credentials. Security requires automatic rotation every 30 days with no code changes when the secret rotates. What should be used?",
+ o:["AWS Secrets Manager with automatic rotation","Systems Manager Parameter Store SecureString","Environment variables encrypted with KMS","An encrypted file in S3 read at startup"],a:0,
+ w:["Secrets Manager has built-in rotation for RDS and other databases, and apps fetch the current value at runtime.","Parameter Store can encrypt values but has no native rotation. You would build it yourself.","Environment variables need a redeploy to change and offer no rotation.","An S3 file needs custom rotation logic and risks stale credentials."],
+ k:"rotate credentials automatically → Secrets Manager"},
+{id:"q8",d:"sec",q:"A bank requires encryption keys stored in dedicated, single-tenant hardware where AWS has no access to the key material. Which service meets this?",
+ o:["AWS CloudHSM","AWS KMS with customer managed keys","AWS KMS with AWS managed keys","S3 server-side encryption with S3 managed keys (SSE-S3)"],a:0,
+ w:["CloudHSM gives you dedicated HSMs in your VPC, and only you control the keys.","KMS is multi-tenant and AWS operates the HSMs, even for customer managed keys.","AWS managed keys are controlled by AWS, which fails the requirement outright.","SSE-S3 keys are fully managed by AWS."],
+ k:"single-tenant HSM, you alone hold keys → CloudHSM"},
+{id:"q9",d:"perf",q:"A media site serves images and videos from S3 to users worldwide. Users far from the bucket's Region see slow loads. What improves performance most?",
+ o:["Put Amazon CloudFront in front of the bucket","Use AWS Global Accelerator","Replicate the bucket to every Region with S3 Cross-Region Replication","Enable S3 Transfer Acceleration"],a:0,
+ w:["CloudFront caches content at edge locations close to viewers, which suits static media.","Global Accelerator speeds up TCP/UDP paths to endpoints but does not cache content.","Replicating everywhere is costly and still needs routing logic. CloudFront solves it with one service.","Transfer Acceleration speeds uploads into S3 over long distances. It is not a delivery cache."],
+ k:"cache static content near users → CloudFront"},
+{id:"q10",d:"perf",q:"A multiplayer game uses UDP. It needs two static IP addresses for customer allow-listing and fast failover between Regions. Which service fits?",
+ o:["AWS Global Accelerator","Amazon CloudFront","Route 53 latency-based routing","Application Load Balancer"],a:0,
+ w:["Global Accelerator gives two static anycast IPs, supports UDP and TCP, and fails over across Regions in seconds.","CloudFront serves HTTP/HTTPS, not raw UDP game traffic, and has no fixed IPs.","DNS failover depends on TTLs and client caching, so it is slower, and it gives no static IPs.","ALB is Layer 7 HTTP within one Region and does not support UDP."],
+ k:"UDP / static IPs / global failover → Global Accelerator"},
+{id:"q11",d:"res",q:"Dozens of Linux EC2 instances across three AZs need a shared, POSIX-compliant file system that grows automatically. Which storage fits?",
+ o:["Amazon EFS","Amazon EBS with Multi-Attach","Amazon S3 mounted with a FUSE driver","Amazon FSx for Windows File Server"],a:0,
+ w:["EFS is a managed NFS file system that spans AZs, scales automatically and is mountable by many instances.","Multi-Attach works only for io1/io2 within a single AZ and needs a cluster-aware file system.","S3 is object storage and not POSIX compliant. FUSE mounts are not a supported design for this.","FSx for Windows uses SMB and targets Windows workloads, not Linux NFS."],
+ k:"shared Linux file system, multi-AZ → EFS"},
+{id:"q12",d:"perf",q:"An HPC workload needs a high-throughput, sub-millisecond file system that can read input data directly from an S3 bucket. Which service fits?",
+ o:["Amazon FSx for Lustre","Amazon EFS","Amazon FSx for Windows File Server","Amazon EBS io2 Block Express"],a:0,
+ w:["FSx for Lustre is built for HPC and links natively to S3 for lazy loading and export.","EFS is general purpose, has no native S3 linking and gives less throughput than Lustre for HPC.","FSx for Windows targets SMB and Active Directory workloads, not HPC.","EBS is block storage attached to instances in one AZ, not a shared parallel file system."],
+ k:"HPC + S3 link → FSx for Lustre"},
+{id:"q13",d:"res",q:"A company needs DR with an RTO of about 15 minutes. It accepts paying for a smaller, fully running copy of production in a second Region. Which strategy is this?",
+ o:["Warm standby","Pilot light","Backup and restore","Multi-site active-active"],a:0,
+ w:["Warm standby runs a scaled-down but complete environment, so you only scale up on failover: minutes of RTO.","Pilot light keeps only core pieces (like replicated data) running. Servers must be launched, so RTO is longer.","Backup and restore costs the least but has the longest RTO, often hours.","Active-active gives near-zero RTO but costs the most. The scenario asks for a smaller copy."],
+ k:"scaled-down copy fully running → warm standby"},
+{id:"q14",d:"res",q:"A stateless web tier gets sudden, unpredictable traffic spikes. It must stay available if one AZ fails. What design fits best?",
+ o:["Application Load Balancer with an EC2 Auto Scaling group across multiple AZs","One large EC2 instance with an Elastic IP","An Auto Scaling group in a single AZ behind a Network Load Balancer","Reserved Instances sized for peak traffic"],a:0,
+ w:["The ALB spreads traffic across AZs and Auto Scaling adds or removes instances as load changes.","One instance is a single point of failure and cannot absorb spikes.","A single AZ fails the availability requirement.","Sizing for peak wastes money and still does not survive an AZ failure unless spread out."],
+ k:"spiky + survive AZ loss → ALB + ASG multi-AZ"},
+{id:"q15",d:"perf",q:"A DynamoDB table serves a read-heavy leaderboard. Reads need microsecond latency with minimal application changes. What should be added?",
+ o:["DynamoDB Accelerator (DAX)","Amazon ElastiCache for Redis","DynamoDB global tables","More provisioned read capacity"],a:0,
+ w:["DAX is an in-memory cache built for DynamoDB that delivers microsecond reads through an API-compatible client.","Redis works, but you must write the cache logic in the app. DAX is the drop-in choice.","Global tables replicate across Regions. They do not bring reads to microseconds.","More capacity raises throughput, but reads stay in single-digit milliseconds."],
+ k:"DynamoDB + microseconds → DAX"},
+{id:"q16",d:"perf",q:"A web app on an Auto Scaling group loses user sessions whenever instances scale in. What is the best way to keep sessions?",
+ o:["Store sessions in Amazon ElastiCache","Enable sticky sessions on the load balancer","Store sessions on each instance's EBS volume","Use larger instances so scale-in happens less often"],a:0,
+ w:["An external store such as ElastiCache (or DynamoDB) makes the web tier stateless, so any instance can serve any user.","Sticky sessions still lose the session when that instance is terminated.","Data on that instance's EBS volume disappears with the instance.","This makes it happen less often but does not fix it."],
+ k:"keep session state off instances → ElastiCache"},
+{id:"q17",d:"sec",q:"A public web app behind an ALB is getting SQL injection and cross-site scripting attempts. What should be used to block them?",
+ o:["AWS WAF on the ALB","AWS Shield Advanced","Amazon GuardDuty","Security group rules"],a:0,
+ w:["WAF inspects HTTP requests and has managed rules for SQL injection and XSS.","Shield Advanced is for DDoS protection. It does not inspect payloads for injection.","GuardDuty detects threats from logs. It alerts but does not block requests.","Security groups filter by IP, port and protocol, not request content."],
+ k:"SQL injection / XSS → WAF"},
+{id:"q18",d:"sec",q:"A company must find and report personally identifiable information stored across hundreds of S3 buckets. Which service does this?",
+ o:["Amazon Macie","Amazon Inspector","Amazon GuardDuty","AWS Config"],a:0,
+ w:["Macie uses machine learning and pattern matching to discover sensitive data such as PII in S3.","Inspector scans EC2, ECR images and Lambda for software vulnerabilities.","GuardDuty spots suspicious activity, not sensitive data content.","Config tracks resource configuration, not what is inside objects."],
+ k:"PII in S3 → Macie"},
+{id:"q19",d:"sec",q:"Across 40 AWS accounts, no one, including account administrators, should be able to stop CloudTrail logging. What enforces this?",
+ o:["A service control policy (SCP) in AWS Organizations","IAM policies in each account denying cloudtrail:StopLogging","An AWS Config rule that alerts when CloudTrail is off","A CloudWatch alarm on CloudTrail changes"],a:0,
+ w:["SCPs cap the permissions of every principal in member accounts, including admins and root.","Admins in each account can edit or remove their own IAM policies.","Config detects the change after it happens. It does not prevent it.","An alarm notifies you after the fact. It does not prevent the action."],
+ k:"org-wide guardrail nobody can bypass → SCP"},
+{id:"q20",d:"cost",q:"A company runs steady 24/7 compute for 3 years but expects to move between EC2 families, Regions and AWS Fargate. Which option saves the most while keeping that flexibility?",
+ o:["Compute Savings Plans","EC2 Instance Savings Plans","Standard Reserved Instances","Spot Instances"],a:0,
+ w:["Compute Savings Plans apply across instance families, Regions, Fargate and Lambda.","Instance Savings Plans lock you to one instance family in one Region.","Standard RIs lock instance attributes and do not cover Fargate.","Spot can be interrupted, which is wrong for steady production work."],
+ k:"steady + flexible across family/Region/Fargate → Compute Savings Plans"},
+{id:"q21",d:"cost",q:"A nightly batch job processes images. It can stop and restart from checkpoints and has no strict deadline. What is the cheapest compute option?",
+ o:["EC2 Spot Instances","On-Demand Instances","Dedicated Hosts","Reserved Instances"],a:0,
+ w:["Spot offers deep discounts on spare capacity. Interruptions are fine for checkpointed, flexible jobs.","On-Demand works but costs much more than Spot.","Dedicated Hosts are for licensing or compliance needs and cost the most.","RIs need a 1- or 3-year commitment that a nightly job does not justify."],
+ k:"interruptible + flexible → Spot"},
+{id:"q22",d:"res",q:"A company must move 80 TB from its data center to S3 within 2 weeks. Its internet link is 100 Mbps and already busy. What should be used?",
+ o:["AWS Snowball Edge","AWS DataSync over the internet","S3 Transfer Acceleration","AWS Site-to-Site VPN"],a:0,
+ w:["At 100 Mbps, 80 TB takes over two months online. Snowball ships the data physically in days.","DataSync is limited by the same 100 Mbps link.","Transfer Acceleration improves long-distance paths but cannot exceed your link bandwidth.","A VPN rides the same slow internet link."],
+ k:"tens of TB + slow link + deadline → Snowball"},
+{id:"q23",d:"perf",q:"A company needs to copy files from on-premises NFS servers to Amazon EFS every night, with scheduling and automatic integrity checks. What should be used?",
+ o:["AWS DataSync","AWS Transfer Family","AWS Snowball Edge","Amazon S3 File Gateway"],a:0,
+ w:["DataSync automates online transfers between NFS/SMB and S3, EFS or FSx, with scheduling and verification.","Transfer Family provides SFTP/FTPS endpoints for partners, not scheduled bulk sync.","Snowball is for offline one-time bulk moves, not nightly copies.","File Gateway presents S3 as a file share. It does not write to EFS."],
+ k:"scheduled online copy NFS → EFS/S3 → DataSync"},
+{id:"q24",d:"res",q:"On-premises apps must keep using NFS shares, but the company wants the data stored durably in S3 with a local cache of frequently used files. What fits?",
+ o:["Amazon S3 File Gateway","Volume Gateway in stored mode","Tape Gateway","AWS DataSync"],a:0,
+ w:["S3 File Gateway exposes NFS/SMB shares on-premises, caches hot data locally and stores files as S3 objects.","Volume Gateway presents iSCSI block volumes, not NFS file shares.","Tape Gateway replaces physical tape backup.","DataSync moves data but does not provide an on-premises share with caching."],
+ k:"on-prem NFS/SMB backed by S3 → File Gateway"},
+{id:"q25",d:"res",q:"When a user uploads an image to S3, a thumbnail must be created. The team wants no servers to manage. What is the simplest design?",
+ o:["An S3 event notification that invokes an AWS Lambda function","An EC2 cron job that lists the bucket every minute","An AWS Batch job triggered nightly","Kinesis Data Streams reading the bucket"],a:0,
+ w:["S3 events can invoke Lambda directly for each upload. It is serverless and runs on demand.","Polling wastes compute, adds delay, and you manage the server.","A nightly batch does not create thumbnails promptly.","Kinesis does not read from S3. It ingests streaming records."],
+ k:"react to S3 upload, serverless → S3 event + Lambda"},
+{id:"q26",d:"perf",q:"A website sends clickstream events that several independent applications must process in real time. They must be able to replay the last 24 hours of data. What fits?",
+ o:["Amazon Kinesis Data Streams","Amazon SQS standard queue","Amazon Data Firehose","Amazon SNS"],a:0,
+ w:["Kinesis Data Streams retains records (24 hours by default, up to 365 days) and lets several consumers read and replay.","Once a consumer deletes an SQS message it is gone, so several apps cannot replay it.","Firehose delivers data to destinations like S3. It does not offer replay to multiple consumers.","SNS pushes and forgets. It does not keep messages for replay."],
+ k:"real-time + many consumers + replay → Kinesis Data Streams"},
+{id:"q27",d:"res",q:"When an order is placed, three services (billing, shipping, analytics) must each get a copy of the event and process it at their own pace. What design fits?",
+ o:["Publish to an SNS topic with an SQS queue subscribed for each service","Send to one SQS queue that all three services poll","Have the order service call each service's API directly","Write the order to a separate S3 bucket for each service"],a:0,
+ w:["SNS-to-SQS fan-out puts a copy in each queue, and each service consumes at its own pace with buffering.","With one queue each message goes to only one consumer, so the services would compete for messages.","Direct calls tightly couple the services. If one is down, orders fail.","S3 is not a messaging service. This adds polling and complexity."],
+ k:"one event → many independent consumers → SNS + SQS fan-out"},
+{id:"q28",d:"sec",q:"An application on EC2 needs to read objects from an S3 bucket. What is the most secure way to grant access?",
+ o:["Attach an IAM role to the instance through an instance profile","Store an IAM user's access keys in the app config","Make the bucket public and restrict by IP","Put root account credentials in user data"],a:0,
+ w:["Roles provide temporary credentials that rotate automatically, with no long-term secrets on the instance.","Long-term access keys can leak and must be rotated manually.","Public buckets risk exposure, and IP restrictions alone are weak.","Never use root credentials for applications."],
+ k:"EC2 needs AWS access → IAM role"},
+{id:"q29",d:"sec",q:"A security team in account A must read CloudWatch Logs in account B without creating IAM users in account B. What should be done?",
+ o:["Create a role in account B that trusts account A, and have the team assume it","Share account B's root password with the team","Create access keys in account B and send them to account A","Make the logs publicly readable"],a:0,
+ w:["A cross-account role with a trust policy and STS AssumeRole gives temporary, auditable access.","Sharing root credentials breaks every security best practice.","Long-term keys can leak and do not meet the no-IAM-users requirement.","Public logs expose data to everyone."],
+ k:"cross-account access → role + trust policy (STS)"},
+{id:"q30",d:"sec",q:"A malicious IP range keeps probing a public subnet. The team must explicitly block that range for every instance in the subnet. What should be used?",
+ o:["A network ACL deny rule on the subnet","A security group deny rule","AWS Shield Standard","An IAM policy with a source IP condition"],a:0,
+ w:["NACLs are stateless, apply at the subnet level and support explicit deny rules.","Security groups support allow rules only. They cannot deny.","Shield Standard covers common DDoS attacks automatically. You cannot block a specific range with it.","IAM controls API access, not network traffic to instances."],
+ k:"explicitly DENY an IP → NACL"},
+{id:"q31",d:"res",q:"A global app on Amazon Aurora MySQL needs Regional DR with an RPO of about 1 second and an RTO under 1 minute. What fits?",
+ o:["Aurora Global Database","Aurora Multi-AZ in one Region","Cross-Region copies of automated snapshots","AWS DMS ongoing replication"],a:0,
+ w:["Aurora Global Database replicates to other Regions with typical lag under a second, and a secondary can be promoted in about a minute.","Multi-AZ protects against AZ failures, not a full Region outage.","Snapshot copies mean RPO of hours and slow restores.","DMS can replicate but adds lag and operational work. It is not built for this RPO/RTO."],
+ k:"cross-Region DB, RPO ~1s → Aurora Global Database"},
+{id:"q32",d:"cost",q:"A database on EC2 needs a 500 GB EBS volume with a steady 10,000 IOPS. Which volume type is most cost-effective?",
+ o:["gp3 with IOPS provisioned to 10,000","io2 Provisioned IOPS SSD","gp2, sized up until it reaches 10,000 IOPS","st1 Throughput Optimized HDD"],a:0,
+ w:["gp3 lets you set IOPS independently of size, at a lower price than io2.","io2 works but costs more. Choose it for very high IOPS or higher durability needs.","gp2 gives 3 IOPS per GB, so you would pay for about 3.3 TB to reach 10,000 IOPS.","st1 is HDD for sequential throughput, not IOPS-heavy databases."],
+ k:"IOPS without paying for size → gp3"},
+{id:"q33",d:"cost",q:"A log-processing cluster reads large files sequentially and needs high throughput at the lowest cost. Low IOPS is acceptable. Which EBS volume fits?",
+ o:["st1 Throughput Optimized HDD","sc1 Cold HDD","gp3 General Purpose SSD","io2 Provisioned IOPS SSD"],a:0,
+ w:["st1 is low-cost HDD built for frequently accessed, throughput-heavy sequential work like logs and big data.","sc1 is cheapest but meant for infrequently accessed data, with lower throughput.","gp3 is SSD and costs more per GB than needed here.","io2 is the most expensive and optimized for IOPS, not sequential throughput."],
+ k:"big sequential reads, cheap → st1"},
+{id:"q34",d:"res",q:"A Lambda-based API opens a new Amazon RDS connection on each invocation. During spikes, the database runs out of connections. What should be added?",
+ o:["Amazon RDS Proxy","A larger RDS instance class","An RDS read replica","Lambda reserved concurrency of 1"],a:0,
+ w:["RDS Proxy pools and reuses connections, protecting the database from connection storms.","A bigger instance raises the limit but does not fix the pattern, and costs more.","Replicas add read capacity, but writes and connection storms still hit the primary.","Concurrency of 1 would throttle the API to near uselessness."],
+ k:"Lambda exhausting DB connections → RDS Proxy"},
+{id:"q35",d:"sec",q:"S3 objects must be encrypted with keys the company controls and can disable, and every use of the keys must be auditable. What should be used?",
+ o:["SSE-KMS with a customer managed key","SSE-S3","SSE-C","Client-side encryption with a key stored in the code"],a:0,
+ w:["Customer managed KMS keys let you control the key policy, rotation and disabling, and CloudTrail logs every key use.","SSE-S3 keys are fully managed by AWS, with no per-use audit trail you control.","With SSE-C you send your own key on each request and manage it yourself. There is no KMS audit trail.","Keys in code can leak and leave no audit trail."],
+ k:"control + disable + audit key use → SSE-KMS (customer managed key)"},
+{id:"q36",d:"perf",q:"An app runs in us-east-1 and eu-west-1. Users should be routed to whichever Region gives them the fastest response. Which Route 53 routing policy fits?",
+ o:["Latency-based routing","Geolocation routing","Weighted routing","Simple routing"],a:0,
+ w:["Latency routing sends each user to the Region with the lowest measured latency.","Geolocation routes by the user's location, used for compliance or localization rather than speed.","Weighted splits traffic by percentage, for example blue/green or canary releases.","Simple routing returns one record, with no health or latency logic."],
+ k:"fastest Region for the user → latency routing"},
+{id:"q37",d:"sec",q:"Employees should sign in once with the corporate identity provider and access many AWS accounts with role-based permissions. What should be used?",
+ o:["AWS IAM Identity Center","Amazon Cognito user pools","An IAM user per employee in each account","AWS Directory Service by itself"],a:0,
+ w:["IAM Identity Center provides workforce single sign-on across all accounts in an organization.","Cognito is for customer sign-up and sign-in to your own apps, not workforce access to AWS.","Separate IAM users per account do not scale and create long-lived credentials.","Directory Service hosts a directory but does not by itself provide multi-account SSO."],
+ k:"workforce SSO across accounts → IAM Identity Center"},
+{id:"q38",d:"perf",q:"A team wants to run containers without managing servers or cluster capacity. What should they use?",
+ o:["Amazon ECS on AWS Fargate","Amazon ECS on the EC2 launch type","Docker on self-managed EC2 instances","Elastic Beanstalk with a single instance"],a:0,
+ w:["Fargate runs containers serverlessly. You define tasks, and AWS manages the compute.","With the EC2 launch type you patch and scale the instances yourself.","This is the most management work of all.","Beanstalk still runs on instances you manage capacity for, and one instance has no HA."],
+ k:"containers, no servers → Fargate"},
+{id:"q39",d:"perf",q:"A company wants to add a generative AI assistant that calls foundation models through an API, without training models or managing infrastructure. What should be used?",
+ o:["Amazon Bedrock","Amazon SageMaker AI training jobs","Amazon Comprehend","Amazon Lex"],a:0,
+ w:["Bedrock gives serverless API access to foundation models from several providers.","SageMaker AI is for building, training and hosting your own models, which is much more work.","Comprehend does NLP tasks like sentiment and entity extraction, not generative chat.","Lex builds intent-based chatbots. It is not a foundation-model service on its own."],
+ k:"foundation models via API, no infra → Bedrock"},
+{id:"q40",d:"cost",q:"Several DynamoDB tables hold rarely read historical data. Storage, not throughput, is now most of their cost. What is the simplest saving?",
+ o:["Switch those tables to the DynamoDB Standard-IA table class","Add DynamoDB Accelerator (DAX)","Switch the tables to provisioned capacity","Enable global tables"],a:0,
+ w:["The Standard-IA table class cuts storage cost for tables that are mostly storage, with the same performance.","DAX adds cost and speeds up reads. It does nothing for storage.","Capacity mode changes throughput cost, not storage cost.","Global tables add replicas and increase cost."],
+ k:"DynamoDB mostly storage, rarely read → Standard-IA table class"}
+];
+const QMAP = Object.fromEntries(QUESTIONS.map(q=>[q.id,q]));
+
+/* Confusing pairs: t=title, s=subtitle, h=headers, r=rows, tip */
+const PAIRS = [
+{t:"Messaging & streaming",s:"SQS · SNS · EventBridge · Kinesis",h:["Service","Model","Keeps data?","Pick it when"],r:[
+ ["SQS standard","Pull queue","Up to 14 days","Decouple and buffer work. At-least-once is fine."],
+ ["SQS FIFO","Ordered pull queue","Up to 14 days","Exactly-once processing plus strict order."],
+ ["SNS","Push pub/sub","No","Fan-out, notifications, email/SMS, SNS→SQS."],
+ ["EventBridge","Event bus + rules","Optional archive & replay","React to AWS or SaaS events, route by content, schedules."],
+ ["Kinesis Data Streams","Sharded stream","24 h to 365 days","Real-time, many consumers, replay."],
+ ["Data Firehose","Delivery stream","No (buffers)","Load streams into S3, Redshift or OpenSearch with no code."]],
+ tip:"\"Decouple\" → SQS. \"Fan-out\" → SNS + SQS. \"Replay\" or \"real-time analytics\" → Kinesis."},
+{t:"Database availability",s:"Multi-AZ · read replica · Aurora Global",h:["Option","Replication","Failover","Use for"],r:[
+ ["RDS Multi-AZ","Synchronous, same Region","Automatic, 1–2 min","High availability"],
+ ["Read replica","Asynchronous","Manual promotion","Scaling reads, reporting"],
+ ["Cross-Region replica","Asynchronous","Manual promotion","DR and local reads abroad"],
+ ["Aurora Replicas","Shared storage, ms lag","Automatic","HA + reads (up to 15)"],
+ ["Aurora Global Database","Storage-level, under 1 s","Promote in about 1 min","Regional DR, global reads"]],
+ tip:"\"Automatic failover\" → Multi-AZ. \"Offload reads\" → replica. \"Region outage, RPO seconds\" → Aurora Global."},
+{t:"File & block storage",s:"EFS · FSx · EBS · S3",h:["Service","Protocol","Scope","Pick it when"],r:[
+ ["EBS","Block","One AZ, usually one instance","Boot volumes, single-instance databases"],
+ ["EFS","NFS (Linux)","Regional, many instances","Shared Linux files that grow automatically"],
+ ["FSx for Windows","SMB + Active Directory","Single- or multi-AZ","Windows apps, AD permissions"],
+ ["FSx for Lustre","Lustre","HPC cluster","HPC and ML, links to S3"],
+ ["FSx for NetApp ONTAP","NFS, SMB, iSCSI","Multi-protocol","Lift-and-shift NetApp, mixed protocols"],
+ ["S3","Object (HTTP API)","Regional, 11 nines durability","Data lakes, static assets, backups"]],
+ tip:"\"Linux + shared\" → EFS. \"Windows / SMB / AD\" → FSx Windows. \"HPC\" → Lustre."},
+{t:"Storage Gateway types",s:"File · Volume · Tape",h:["Type","Presents on-prem as","Stored in AWS as","Use for"],r:[
+ ["S3 File Gateway","NFS / SMB share","S3 objects","Files backed by S3 with a local cache"],
+ ["FSx File Gateway","SMB share","FSx for Windows","Low-latency access to FSx from branches"],
+ ["Volume Gateway (cached)","iSCSI block","S3 + EBS snapshots","Primary data in AWS, hot data cached"],
+ ["Volume Gateway (stored)","iSCSI block","Async backup to S3","Primary data on-prem, backup to AWS"],
+ ["Tape Gateway","Virtual tape library","S3 / Glacier","Replacing physical tape backups"]],
+ tip:"Read the protocol: NFS/SMB → File. iSCSI → Volume. Tape/VTL → Tape."},
+{t:"Getting data into AWS",s:"DataSync · Snow · Transfer Family · DX · VPN",h:["Option","Online?","Best for","Watch out"],r:[
+ ["DataSync","Online","Scheduled copies NFS/SMB/HDFS ↔ S3/EFS/FSx","Bound by your bandwidth"],
+ ["Snowball Edge","Offline device","Tens of TB to PB, slow links","Days of shipping time"],
+ ["Transfer Family","Online","SFTP/FTPS/FTP for partners","Not for bulk migration"],
+ ["S3 Transfer Acceleration","Online","Faster long-distance uploads to S3","Cannot beat your link speed"],
+ ["Direct Connect","Private line","Consistent bandwidth, low latency","Weeks to provision, not encrypted by default"],
+ ["Site-to-Site VPN","Over internet","Quick encrypted link, DX backup","Variable performance"]],
+ tip:"Do the math: 1 TB at 100 Mbps ≈ 1 day. If it will not finish in time online → Snowball."},
+{t:"Edge & DNS",s:"CloudFront · Global Accelerator · Route 53",h:["Service","Layer","Caches?","Pick it when"],r:[
+ ["CloudFront","HTTP/HTTPS (L7)","Yes","Static/dynamic web content, S3 origins, OAC"],
+ ["Global Accelerator","TCP/UDP (L4)","No","Static anycast IPs, UDP, gaming/IoT, fast failover"],
+ ["Route 53 latency","DNS","No","Send users to the fastest Region"],
+ ["Route 53 geolocation","DNS","No","Content by country, compliance"],
+ ["Route 53 failover","DNS","No","Active-passive with health checks"],
+ ["Route 53 weighted","DNS","No","Canary and blue/green splits"]],
+ tip:"\"Static IP\" or \"UDP\" → Global Accelerator. \"Cache\" → CloudFront."},
+{t:"Security services",s:"WAF · Shield · GuardDuty · Inspector · Macie…",h:["Service","What it does","Keyword"],r:[
+ ["WAF","Filters HTTP requests (L7)","SQL injection, XSS, rate limits"],
+ ["Shield Standard","Free basic DDoS protection","Automatic, always on"],
+ ["Shield Advanced","Enhanced DDoS + response team + cost protection","DDoS, 24/7 response"],
+ ["GuardDuty","Threat detection from logs","Crypto-mining, malicious IPs"],
+ ["Inspector","Vulnerability scanning","CVEs on EC2, ECR, Lambda"],
+ ["Macie","Sensitive data discovery","PII in S3"],
+ ["Config","Configuration history & compliance rules","Was this resource compliant?"],
+ ["CloudTrail","API activity log","Who did what, when"],
+ ["Security Hub","Aggregates findings","Single security dashboard"]],
+ tip:"Detect vs prevent: GuardDuty, Config and Inspector find things. WAF, SCPs and NACLs stop things."},
+{t:"Security groups vs NACLs",s:"Stateful vs stateless",h:["","Security group","Network ACL"],r:[
+ ["Applies to","ENI / instance","Subnet"],
+ ["State","Stateful (return traffic allowed)","Stateless (allow both directions)"],
+ ["Rules","Allow only","Allow and deny"],
+ ["Evaluation","All rules together","In number order, first match wins"],
+ ["Default (custom)","Deny all inbound","Deny all (default NACL allows all)"]],
+ tip:"Any time the question says \"deny\" or \"block an IP\" → NACL."},
+{t:"VPC connectivity",s:"Peering · Transit Gateway · PrivateLink · endpoints",h:["Option","Shape","Use for"],r:[
+ ["VPC peering","1-to-1, not transitive","A few VPCs, no overlapping CIDRs"],
+ ["Transit Gateway","Hub and spoke, transitive","Many VPCs plus on-prem"],
+ ["PrivateLink","Expose one service privately","SaaS/service to other VPCs, overlapping CIDRs OK"],
+ ["Gateway endpoint","Route table entry, free","S3 and DynamoDB only"],
+ ["Interface endpoint","ENI in subnet, hourly cost","Most other AWS services"]],
+ tip:"Peering is never transitive. \"Dozens of VPCs\" → Transit Gateway."},
+{t:"Secrets & keys",s:"Secrets Manager · Parameter Store · KMS · CloudHSM",h:["Service","Holds","Rotation","Pick it when"],r:[
+ ["Secrets Manager","Secrets","Built-in automatic","DB credentials, API keys that must rotate"],
+ ["Parameter Store","Config + SecureString","None built in","Config values, cheap (standard tier free)"],
+ ["KMS","Encryption keys (multi-tenant)","Automatic key rotation","Encryption across AWS services"],
+ ["CloudHSM","Keys in your dedicated HSM","You manage","Single-tenant, full customer control"]],
+ tip:"\"Rotate\" → Secrets Manager. \"Dedicated / single-tenant\" → CloudHSM."},
+{t:"S3 storage classes",s:"Know the minimums and retrieval times",h:["Class","Retrieval","Min. duration","Use for"],r:[
+ ["Standard","ms","None","Hot data"],
+ ["Intelligent-Tiering","ms (archive tiers optional)","None","Unknown or changing patterns"],
+ ["Standard-IA","ms, per-GB fee","30 days","Infrequent but needs fast access"],
+ ["One Zone-IA","ms, per-GB fee","30 days","Re-creatable infrequent data"],
+ ["Glacier Instant Retrieval","ms","90 days","Archive read about once a quarter"],
+ ["Glacier Flexible Retrieval","Minutes to 12 h","90 days","Archive, restores can wait"],
+ ["Glacier Deep Archive","12 h (standard) / 48 h (bulk)","180 days","Cheapest, long-term compliance"]],
+ tip:"\"Milliseconds + archive\" → Glacier Instant. \"Hours OK + cheapest\" → Deep Archive."},
+{t:"Disaster recovery strategies",s:"Cost goes up as RTO goes down",h:["Strategy","What runs in DR Region","RTO / RPO","Cost"],r:[
+ ["Backup & restore","Nothing, only backups","Hours","$"],
+ ["Pilot light","Core data replicated, servers off","Tens of minutes","$$"],
+ ["Warm standby","Full stack, scaled down","Minutes","$$$"],
+ ["Multi-site active-active","Full stack, full size, live","Near zero","$$$$"]],
+ tip:"\"Scaled-down but running\" → warm standby. \"Only the database running\" → pilot light."},
+{t:"EC2 pricing models",s:"Commitment vs flexibility",h:["Option","Discount","Commitment","Pick it when"],r:[
+ ["On-Demand","None","None","Short, unpredictable, can't be interrupted"],
+ ["Spot","Deepest","None, can be interrupted","Batch, CI, stateless, fault-tolerant"],
+ ["Compute Savings Plans","High","1 or 3 years of $/hour","Steady use, flexible across family, Region, Fargate, Lambda"],
+ ["EC2 Instance Savings Plans","Higher","1 or 3 years, one family + Region","Steady use, fixed family"],
+ ["Reserved Instances","High","1 or 3 years, fixed attributes","Steady use (Savings Plans are usually preferred)"],
+ ["Dedicated Hosts","None","Optional","Bring-your-own licenses (per socket/core), compliance"]],
+ tip:"\"Licensing per core/socket\" → Dedicated Hosts. \"Interruption OK\" → Spot."},
+{t:"EBS volume types",s:"SSD vs HDD",h:["Type","Media","Optimized for","Use for"],r:[
+ ["gp3","SSD","Balanced, IOPS set separately from size","Default for most workloads"],
+ ["io2 Block Express","SSD","Highest IOPS, 99.999% durability","Critical, I/O-heavy databases"],
+ ["st1","HDD","Throughput, frequent access","Big data, logs, sequential reads"],
+ ["sc1","HDD","Lowest cost, cold","Infrequently read sequential data"]],
+ tip:"HDD (st1/sc1) cannot be boot volumes."}
+];
+
+/* Trigger keywords: [keyword, answer] */
+const TRIG = [
+["Exactly-once processing in order","SQS FIFO"],["Decouple components, buffer requests","SQS"],["Fan-out one message to many queues","SNS + SQS"],
+["Real-time stream, many consumers, replay","Kinesis Data Streams"],["Load streaming data into S3/Redshift, no code","Data Firehose"],
+["Route AWS or SaaS events by rules","EventBridge"],["Shared POSIX file system for Linux","EFS"],["SMB shares with Active Directory","FSx for Windows"],
+["HPC file system linked to S3","FSx for Lustre"],["On-prem NFS/SMB backed by S3","S3 File Gateway"],["On-prem iSCSI volumes backed by AWS","Volume Gateway"],
+["Replace physical tape backups","Tape Gateway"],["Petabytes, slow network, offline","Snowball Edge"],["Scheduled online copy NFS → EFS","DataSync"],
+["Partners upload over SFTP","Transfer Family"],["Dedicated private connection to AWS","Direct Connect"],["Quick encrypted link over internet","Site-to-Site VPN"],
+["Connect dozens of VPCs transitively","Transit Gateway"],["Expose a service privately to other VPCs","PrivateLink"],["Free private access to S3 from VPC","Gateway endpoint"],
+["Block SQL injection and XSS","WAF"],["DDoS response team + cost protection","Shield Advanced"],["Threat detection from VPC/DNS/CloudTrail logs","GuardDuty"],
+["Find PII in S3 buckets","Macie"],["Scan EC2/ECR/Lambda for CVEs","Inspector"],["Automatic credential rotation","Secrets Manager"],
+["Single-tenant hardware key storage","CloudHSM"],["Who made this API call?","CloudTrail"],["Resource configuration history & compliance","AWS Config"],
+["Microsecond cache for DynamoDB","DAX"],["Lambda exhausting DB connections","RDS Proxy"],["Automatic DB failover, same Region","RDS Multi-AZ"],
+["Offload read-heavy reporting","Read replica"],["Cross-Region DB, RPO about 1 second","Aurora Global Database"],["Unknown or changing S3 access patterns","S3 Intelligent-Tiering"],
+["Cheapest archive, 12–48 h retrieval","Glacier Deep Archive"],["Archive with millisecond access","Glacier Instant Retrieval"],["Static anycast IPs, UDP, global","Global Accelerator"],
+["Cache content at the edge","CloudFront"],["Interruptible batch, lowest cost","Spot Instances"],["Steady usage, flexible across family/Region","Compute Savings Plans"],
+["Org-wide guardrail even admins can't bypass","SCP"],["Workforce SSO across accounts","IAM Identity Center"],["Customer sign-up / sign-in for your app","Cognito"],
+["Foundation models via API","Bedrock"],["Run containers with no servers","Fargate"],["Query S3 with SQL, serverless","Athena"],
+["Petabyte data warehouse","Redshift"],["Serverless ETL and data catalog","Glue"],["Explicitly deny an IP range","Network ACL"],
+["Route users to the fastest Region","Route 53 latency"],["Keep sessions off the web servers","ElastiCache"],["Many IOPS without paying for size","gp3"]
+];
+
+const PLAN = [
+ {t:"Day 1 · Secure (30%)",f:"The biggest domain. IAM, encryption and the security service zoo.",i:["Lab: Security services + Secrets & keys tables","Lab: Security groups vs NACLs + VPC connectivity","Two quick lessons (they target your weakest domain)","Lock in 15 trigger cards","One 60-second drill"]},
+ {t:"Day 2 · Resilient (26%)",f:"Multi-AZ, decoupling, Auto Scaling and DR.",i:["Lab: Messaging & streaming","Lab: Database availability + DR strategies","Lab: Storage Gateway + Getting data into AWS","Two quick lessons","Lock in 15 more trigger cards"]},
+ {t:"Day 3 · High-performing (24%)",f:"Picking the right storage, caching and edge.",i:["Lab: File & block storage + EBS volume types","Lab: Edge & DNS","Two quick lessons","Fix my misses until the list is empty","Two 60-second drills"]},
+ {t:"Day 4 · Cost-optimized (20%) + mock",f:"Storage classes, pricing models, endpoints. Then a full mock.",i:["Lab: S3 storage classes + EC2 pricing models","Full mock exam (timed)","Review every wrong answer, read all four reasons","Lock in every remaining trigger card"]},
+ {t:"Day 5 · Close the gaps",f:"Only weak spots. No new material.",i:["Fix my misses until the list is empty","Second full mock, aim for 80%+","Read the exam tactics below","Three 60-second drills","Stop studying 2 hours before bed"]}
+];
+const TACTICS = [
+ ["\"LEAST operational overhead\"","Pick the managed or serverless option"],
+ ["\"MOST cost-effective\"","Cheapest option that still meets every requirement"],
+ ["\"Highly available\"","Multiple AZs. \"Disaster recovery\" means another Region."],
+ ["\"Decouple\"","SQS, SNS or EventBridge"],
+ ["\"Without code changes\"","Drop-in services: DAX, RDS Proxy, CloudFront"],
+ ["Two options look alike","Find the one word that differs: in order, static IP, deny, rotate"],
+ ["Stuck","Eliminate two, flag it, move on. Unanswered = wrong; there's no penalty for guessing."]
+];
+
+/* ==================== STATE ==================== */
+const LS="saa-sprint-v1";
+function freshState(){return {xp:0,streak:0,last:null,dom:{sec:{a:0,c:0},res:{a:0,c:0},perf:{a:0,c:0},cost:{a:0,c:0}},missed:[],locked:[],best:0,plan:[],mocks:[]}}
+let S=load();
+function load(){let d=freshState();try{const r=JSON.parse(localStorage.getItem(LS)||"null");if(r){d=Object.assign(d,r);d.dom=Object.assign(freshState().dom,r.dom||{})}}catch(e){}return d}
+function save(){try{localStorage.setItem(LS,JSON.stringify(S))}catch(e){}}
+function dayKey(d){return d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate()}
+function touch(){const t=dayKey(new Date());if(S.last===t)return;const y=new Date();y.setDate(y.getDate()-1);S.streak=(S.last===dayKey(y))?S.streak+1:1;S.last=t}
+function curStreak(){if(!S.last)return 0;const t=new Date(),y=new Date();y.setDate(y.getDate()-1);return (S.last===dayKey(t)||S.last===dayKey(y))?S.streak:0}
+function addXP(n){S.xp+=n;touch();save();renderTop()}
+function renderTop(){$("#stStreak").textContent=curStreak();$("#stXp").textContent=S.xp}
+
+/* ==================== HELPERS ==================== */
+const $=s=>document.querySelector(s);
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function acc(d){const x=S.dom[d];return x.a?x.c/x.a:null}
+function readiness(){let s=0,w=0;for(const d in DOM){const a=acc(d);if(a!=null){s+=a*DOM[d].w;w+=DOM[d].w}}return w?s/w:null}
+function toast(msg){const t=document.createElement("div");t.className="toast";t.textContent=msg;document.body.appendChild(t);setTimeout(()=>t.remove(),1800)}
+const ICON={
+ bolt:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg>',
+ exam:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="m9 12 2 2 4-4"/></svg>',
+ fix:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>',
+ clock:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2.5"/></svg>',
+ lab:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 1.8 3h10.4a2 2 0 0 0 1.8-3l-5-9V3"/></svg>'
+};
+
+/* ==================== ROUTER ==================== */
+const VIEWS=["home","exam","lab","drill","plan"];
+let current="home";
+function show(v){
+  if(!VIEWS.includes(v))v="home";
+  current=v;
+  VIEWS.forEach(x=>{$("#v-"+x).hidden=(x!==v)});
+  document.querySelectorAll(".tabs button").forEach(b=>{if(b.dataset.v===v)b.setAttribute("aria-current","page");else b.removeAttribute("aria-current")});
+  if(location.hash.slice(1)!==v){try{history.replaceState(null,"","#"+v)}catch(e){location.hash=v}}
+  if(v==="home")renderHome();
+  if(v==="exam"&&!X)renderExamPicker();
+  if(v==="lab")renderLab();
+  if(v==="drill"&&!D)renderDrillIntro();
+  if(v==="plan")renderPlan();
+  window.scrollTo(0,0);
+}
+document.querySelectorAll(".tabs button").forEach(b=>b.addEventListener("click",()=>show(b.dataset.v)));
+window.addEventListener("hashchange",()=>{const v=location.hash.slice(1);if(v!==current)show(v)});
+
+/* ==================== HOME ==================== */
+function renderHome(){
+  const r=readiness();
+  const pct=r==null?null:Math.round(r*100);
+  const circ=2*Math.PI*34, off=circ*(1-(r||0));
+  const ringColor=pct==null?"var(--line)":pct>=80?"var(--good)":pct>=65?"var(--flame)":"var(--bad)";
+  const answered=Object.values(S.dom).reduce((s,x)=>s+x.a,0);
+  const order=Object.keys(DOM).map(d=>({d,a:acc(d)})).sort((x,y)=>(x.a==null?-1:x.a)-(y.a==null?-1:y.a));
+  const weakest=order[0];
+  const lastMock=S.mocks.length?S.mocks[S.mocks.length-1]:null;
+  $("#v-home").innerHTML=`
+  <div class="card hero"><div class="grid-bg"></div>
+    <div class="eyebrow">AWS Solutions Architect – Associate</div>
+    <h1>${answered?"Keep the streak alive.":"Pass SAA-C03 in five focused days."}</h1>
+    <p>${answered?`Next up: a 5-question lesson weighted toward ${esc(DOM[weakest.d].n.toLowerCase())}.`:"Short lessons, tricky scenario questions, and a reason for every wrong answer. Ten minutes a night is enough to keep moving."}</p>
+    <button class="btn" id="goLesson">Start a lesson</button>
+  </div>
+  <div class="facts">
+    <div class="fact"><b>65</b><span>questions</span></div>
+    <div class="fact"><b>130</b><span>minutes</span></div>
+    <div class="fact"><b>720</b><span>to pass / 1000</span></div>
+    <div class="fact"><b>4</b><span>domains</span></div>
+  </div>
+  <div class="card">
+    <div class="ready">
+      <svg class="ring" viewBox="0 0 84 84" role="img" aria-label="Readiness ${pct==null?"not yet measured":pct+" percent"}">
+        <circle cx="42" cy="42" r="34" fill="none" stroke="var(--chip)" stroke-width="9"/>
+        <circle cx="42" cy="42" r="34" fill="none" stroke="${ringColor}" stroke-width="9" stroke-linecap="round" stroke-dasharray="${circ.toFixed(1)}" stroke-dashoffset="${off.toFixed(1)}" transform="rotate(-90 42 42)"/>
+        <text x="42" y="47" text-anchor="middle" font-size="18">${pct==null?"–":pct+"%"}</text>
+      </svg>
+      <div><div class="eyebrow">Readiness</div>
+        <div style="font-weight:700;font-size:17px">${pct==null?"Answer a few questions to measure it":pct>=80?"Looking exam-ready":pct>=65?"Close. Drill the weak domain.":"Building up. Keep going."}</div>
+        <div class="muted" style="font-size:13.5px">Weighted by the exam blueprint. ${answered} answered${lastMock?` · last mock ${lastMock.pct}%`:""}</div></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="eyebrow" style="margin-bottom:12px">Domains, weakest first</div>
+    ${order.map((o,i)=>{const a=o.a,p=a==null?0:Math.round(a*100);return `<div class="dom">
+      <div class="name"><span class="dot" style="background:var(--d-${o.d})"></span>${DOM[o.d].n} <span class="muted mono" style="font-size:12px">${DOM[o.d].w}%</span>${i===0&&a!=null&&a<0.8?' <span class="weak">weakest</span>':""}</div>
+      <div class="pct">${a==null?"not started":p+"% · "+S.dom[o.d].a+" Q"}</div>
+      <div class="meter"><span style="width:${p}%;background:var(--d-${o.d})"></span></div></div>`}).join("")}
+  </div>
+  <div class="actions">
+    <button class="tile" data-go="mock"><span class="ic" style="background:var(--accent)">${ICON.exam}</span><b>Mock exam</b><span>All ${QUESTIONS.length} questions, timed, review at the end</span></button>
+    <button class="tile" data-go="fix"><span class="ic" style="background:var(--bad)">${ICON.fix}</span><b>Fix my misses</b><span>${S.missed.length?S.missed.length+" waiting":"Nothing missed yet"}</span></button>
+    <button class="tile" data-go="drill"><span class="ic" style="background:var(--flame)">${ICON.clock}</span><b>60-second drill</b><span>Best: ${S.best} correct</span></button>
+    <button class="tile" data-go="lab"><span class="ic" style="background:var(--d-cost)">${ICON.lab}</span><b>Service Lab</b><span>${S.locked.length}/${TRIG.length} triggers locked in</span></button>
+  </div>`;
+  $("#goLesson").onclick=()=>startSession("lesson");
+  document.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>{const g=b.dataset.go;if(g==="mock")startSession("mock");else if(g==="fix"){if(S.missed.length)startSession("fix");else toast("No misses yet. Nice.")}else show(g)});
+}
+
+/* ==================== EXAM ENGINE ==================== */
+let X=null, timerId=null;
+function pickLesson(){
+  const scored=QUESTIONS.map(q=>{const a=acc(q.d);let s=(a==null?0.4:a)+Math.random()*0.45;if(S.missed.includes(q.id))s-=0.35;return {id:q.id,s}});
+  return scored.sort((x,y)=>x.s-y.s).slice(0,5).map(x=>x.id);
+}
+function startSession(mode){
+  let ids;
+  if(mode==="lesson")ids=pickLesson();
+  else if(mode==="mock")ids=shuffle(QUESTIONS.map(q=>q.id));
+  else ids=shuffle(S.missed).slice(0,10);
+  X={mode,i:0,xp:0,items:ids.map(id=>({id,order:shuffle([0,1,2,3]),pick:null})),end:mode==="mock"?Date.now()+ids.length*120000:null};
+  clearInterval(timerId);
+  if(X.end)timerId=setInterval(tick,1000);
+  show("exam");renderQ();
+}
+function tick(){if(!X||!X.end)return;const left=Math.max(0,X.end-Date.now());const el=$("#timer");if(el){const m=Math.floor(left/60000),s=Math.floor(left%60000/1000);el.textContent=m+":"+String(s).padStart(2,"0")+" left"}if(left<=0)finishMock()}
+function record(q,ok){
+  S.dom[q.d].a++;if(ok)S.dom[q.d].c++;
+  const i=S.missed.indexOf(q.id);
+  if(ok&&i>-1)S.missed.splice(i,1);
+  if(!ok&&i===-1)S.missed.push(q.id);
+}
+function renderExamPicker(){
+  $("#v-exam").innerHTML=`
+  <div><div class="eyebrow">Practice</div><h2 style="font-size:26px;margin-top:4px">Pick a session</h2></div>
+  <div class="modes">
+    <button class="mode" data-m="lesson"><span class="ic" style="background:var(--good)">${ICON.bolt}</span><b>Quick lesson · 5 questions</b><span>Instant feedback with a reason for every option. Weighted toward your weakest domain.</span></button>
+    <button class="mode" data-m="mock"><span class="ic" style="background:var(--accent)">${ICON.exam}</span><b>Mock exam · ${QUESTIONS.length} questions</b><span>Timed at 2 minutes a question, like the real thing. No hints until you finish.</span></button>
+    <button class="mode" data-m="fix" ${S.missed.length?"":"disabled"}><span class="ic" style="background:var(--bad)">${ICON.fix}</span><b>Fix my misses · ${S.missed.length}</b><span>Only questions you got wrong. Answer one right and it leaves the list.</span></button>
+  </div>
+  <p class="muted" style="font-size:13.5px;margin:0">All questions are original scenarios written for the SAA-C03 blueprint. They are not exam dumps.</p>`;
+  document.querySelectorAll("[data-m]").forEach(b=>b.onclick=()=>startSession(b.dataset.m));
+}
+function renderQ(){
+  const it=X.items[X.i], q=QMAP[it.id], L="ABCD", mock=X.mode==="mock";
+  let h=`<div class="qhead"><button class="ghost" id="quit">Quit</button><div class="bar"><span style="width:${(X.i/X.items.length*100).toFixed(1)}%"></span></div><span class="mono" style="font-size:13px;color:var(--muted)">${X.i+1}/${X.items.length}</span></div>`;
+  if(mock)h+=`<div class="timer mono" id="timer"></div>`;
+  h+=`<div><span class="dchip"><i style="background:var(--d-${q.d})"></i>${DOM[q.d].n}</span></div><h2 class="qtext">${esc(q.q)}</h2><div class="opts">`;
+  it.order.forEach((oi,k)=>{h+=`<button class="opt${it.pick===oi?" sel":""}" data-oi="${oi}"><span class="let">${L[k]}</span><span>${esc(q.o[oi])}</span></button>`});
+  h+=`</div><div id="fb"></div>`;
+  if(mock)h+=`<div class="row" style="justify-content:space-between">${X.i>0?'<button class="btn soft" id="prev">Back</button>':"<span></span>"}<button class="btn" id="next" ${it.pick==null?"disabled":""}>${X.i===X.items.length-1?"Finish exam":"Next"}</button></div>`;
+  $("#v-exam").innerHTML=h;
+  if(mock)tick();
+  let armed=false;
+  $("#quit").onclick=e=>{if(!armed){armed=true;e.target.textContent="Tap again to quit";setTimeout(()=>{armed=false;const b=$("#quit");if(b)b.textContent="Quit"},2500);return}clearInterval(timerId);X=null;show("home")};
+  document.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{
+    const oi=+b.dataset.oi;
+    if(mock){it.pick=oi;document.querySelectorAll(".opt").forEach(o=>o.classList.toggle("sel",+o.dataset.oi===oi));$("#next").disabled=false}
+    else answerLesson(oi);
+  });
+  if(mock){
+    $("#next").onclick=()=>{if(X.i===X.items.length-1)finishMock();else{X.i++;renderQ();window.scrollTo(0,0)}};
+    const p=$("#prev");if(p)p.onclick=()=>{X.i--;renderQ();window.scrollTo(0,0)};
+  }
+}
+function reasonsHTML(q,order,pick){
+  return `<ul class="why">${order.map((oi,k)=>{const ok=oi===q.a;return `<li class="${ok?"ok":"no"}"><span class="mk">${ok?"✓":"✗"}</span><span><b>${"ABCD"[k]}. ${esc(q.o[oi])}${oi===pick&&!ok?" (your answer)":""}</b>${esc(q.w[oi])}</span></li>`}).join("")}</ul>`;
+}
+function answerLesson(oi){
+  const it=X.items[X.i],q=QMAP[it.id];if(it.pick!=null)return;
+  it.pick=oi;const ok=oi===q.a;record(q,ok);const gain=ok?10:2;X.xp+=gain;addXP(gain);
+  document.querySelectorAll(".opt").forEach(o=>{const v=+o.dataset.oi;o.disabled=true;if(v===q.a)o.classList.add("right");else if(v===oi)o.classList.add("wrong")});
+  $("#fb").innerHTML=`<div class="fb ${ok?"good":"bad"}"><h3>${ok?"Correct! +10 XP":"Not quite"}</h3><div><span class="kw">${esc(q.k)}</span></div>${reasonsHTML(q,it.order,oi)}<button class="btn wide ${ok?"good":"bad"}" id="cont">${X.i===X.items.length-1?"Finish":"Continue"}</button></div>`;
+  $("#cont").onclick=()=>{if(X.i===X.items.length-1)finishLesson();else{X.i++;renderQ();window.scrollTo(0,0)}};
+  $("#fb").scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"nearest"});
+}
+function finishLesson(){
+  const right=X.items.filter(it=>it.pick===QMAP[it.id].a).length,n=X.items.length;
+  const bonus=right===n?15:0;if(bonus)addXP(bonus);
+  $("#v-exam").innerHTML=`<div class="card" style="text-align:center"><div class="eyebrow">${X.mode==="fix"?"Misses session":"Lesson"} complete</div>
+    <div class="big" style="margin:10px 0">${right}/${n}</div>
+    <div style="font-weight:700">+${X.xp+bonus} XP${bonus?" (includes perfect-lesson bonus)":""}</div>
+    <p class="muted">${right===n?"Perfect lesson.":S.missed.length?S.missed.length+" questions are in Fix my misses.":"Nothing left in your misses list."}</p>
+    <div class="stack"><button class="btn wide" id="again">Another lesson</button><button class="btn soft wide" id="home">Back home</button></div></div>`;
+  if(right>=n-1)confetti();
+  X=null;$("#again").onclick=()=>startSession("lesson");$("#home").onclick=()=>show("home");
+}
+function finishMock(){
+  clearInterval(timerId);if(!X)return;
+  const by={sec:[0,0],res:[0,0],perf:[0,0],cost:[0,0]};let right=0;
+  X.items.forEach(it=>{const q=QMAP[it.id],ok=it.pick===q.a;by[q.d][0]++;if(ok){by[q.d][1]++;right++}record(q,ok)});
+  const pct=Math.round(right/X.items.length*100);
+  S.mocks.push({d:dayKey(new Date()),pct});addXP(right*5);
+  const items=X.items;X=null;
+  $("#v-exam").innerHTML=`<div class="card"><div class="eyebrow">Mock exam result</div>
+    <div class="row" style="align-items:flex-end;margin:8px 0 4px"><span class="big" style="color:${pct>=80?"var(--good)":pct>=70?"var(--flame)":"var(--bad)"}">${pct}%</span><span class="muted" style="padding-bottom:6px">${right} of ${items.length} · +${right*5} XP</span></div>
+    <p style="margin:6px 0 14px">${pct>=80?"Strong. Do one more mock on a different day, and if it holds, book the exam.":pct>=70?"Borderline. The real exam is scaled, so aim for a steady 80% here before booking.":"Not yet. Spend a day on the weakest domain below and the Lab tables, then retry."}</p>
+    ${Object.keys(DOM).map(d=>{const [a,c]=by[d],p=a?Math.round(c/a*100):0;return `<div class="dom"><div class="name"><span class="dot" style="background:var(--d-${d})"></span>${DOM[d].n}</div><div class="pct">${c}/${a}</div><div class="meter"><span style="width:${p}%;background:var(--d-${d})"></span></div></div>`}).join("")}
+  </div>
+  <div class="card review"><div class="eyebrow" style="margin-bottom:6px">Review · wrong answers first</div>
+    ${items.slice().sort((a,b)=>(a.pick===QMAP[a.id].a)-(b.pick===QMAP[b.id].a)).map(it=>{const q=QMAP[it.id],ok=it.pick===q.a;return `<details${ok?"":" open"}><summary><span class="mono" style="color:${ok?"var(--good)":"var(--bad)"}">${ok?"✓":"✗"}</span><span>${esc(q.q)}</span></summary><div class="body"><div><span class="kw">${esc(q.k)}</span></div>${it.pick==null?'<div class="muted" style="font-size:13.5px">Not answered</div>':""}${reasonsHTML(q,it.order,it.pick)}</div></details>`}).join("")}
+  </div>
+  <div class="stack"><button class="btn wide" id="fixNow" ${S.missed.length?"":"disabled"}>Fix my misses (${S.missed.length})</button><button class="btn soft wide" id="home">Back home</button></div>`;
+  if(pct>=80)confetti();
+  $("#home").onclick=()=>show("home");$("#fixNow").onclick=()=>startSession("fix");
+  window.scrollTo(0,0);
+}
+
+/* ==================== LAB ==================== */
+let labTab="pairs", labQuery="";
+function renderLab(){
+  const pairs=PAIRS.map(p=>`<details class="pair"><summary><span>${esc(p.t)}<span class="sub">${esc(p.s)}</span></span></summary>
+    <div class="tblwrap"><table><thead><tr>${p.h.map(x=>`<th>${esc(x)}</th>`).join("")}</tr></thead><tbody>${p.r.map(r=>`<tr>${r.map(c=>`<td>${esc(c)}</td>`).join("")}</tr>`).join("")}</tbody></table></div>
+    <div class="tip"><b>Exam tell</b><span>${esc(p.tip)}</span></div></details>`).join("");
+  $("#v-lab").innerHTML=`<div><div class="eyebrow">Service Lab</div><h2 style="font-size:26px;margin-top:4px">The pairs everyone mixes up</h2></div>
+  <div class="seg" role="group" aria-label="Lab section"><button id="tPairs" aria-pressed="${labTab==="pairs"}">Side-by-side tables</button><button id="tTrig" aria-pressed="${labTab==="trig"}">Trigger keywords</button></div>
+  <div id="labBody"></div>`;
+  $("#tPairs").onclick=()=>{labTab="pairs";renderLab()};$("#tTrig").onclick=()=>{labTab="trig";renderLab()};
+  if(labTab==="pairs"){$("#labBody").innerHTML=`<div class="stack">${pairs}</div>`;return}
+  $("#labBody").innerHTML=`<div class="stack"><input class="search" id="labSearch" type="search" placeholder="Search a keyword or service" value="${esc(labQuery)}" aria-label="Search triggers">
+    <div class="progress-line"><span>Tap a card to reveal and lock it in (+2 XP)</span><span class="mono" id="lockCount">${S.locked.length}/${TRIG.length}</span></div>
+    <div class="cards" id="cards"></div></div>`;
+  const draw=()=>{const ql=labQuery.toLowerCase();$("#cards").innerHTML=TRIG.map((t,i)=>({t,i})).filter(o=>!ql||o.t[0].toLowerCase().includes(ql)||o.t[1].toLowerCase().includes(ql)).map(o=>{const on=S.locked.includes(o.i);return `<button class="flip${on?" on":""}" data-i="${o.i}"><span class="k">${esc(o.t[0])}</span><span class="a">${on?"✓ "+esc(o.t[1]):"Tap to reveal"}</span></button>`}).join("")||'<p class="muted">No match.</p>';
+    document.querySelectorAll(".flip").forEach(b=>b.onclick=()=>{const i=+b.dataset.i;if(S.locked.includes(i))return;S.locked.push(i);addXP(2);b.classList.add("on");b.querySelector(".a").textContent="✓ "+TRIG[i][1];$("#lockCount").textContent=S.locked.length+"/"+TRIG.length;if(S.locked.length===TRIG.length){confetti();toast("Every trigger locked in")}})};
+  draw();
+  $("#labSearch").oninput=e=>{labQuery=e.target.value;draw()};
+}
+
+/* ==================== DRILL ==================== */
+let D=null;
+function renderDrillIntro(){
+  $("#v-drill").innerHTML=`<div><div class="eyebrow">60-second drill</div><h2 style="font-size:26px;margin-top:4px">Keyword in, service out</h2></div>
+  <div class="card stack"><p style="margin:0">You see the phrase the exam uses. Tap the service it points to. As many as you can in a minute. Each correct answer is worth 3 XP.</p>
+  <div class="row"><span class="kw">Best: ${S.best}</span><span class="kw">${TRIG.length} keywords</span></div>
+  <button class="btn wide" id="dStart">Start</button></div>`;
+  $("#dStart").onclick=drillStart;
+}
+function drillStart(){D={score:0,miss:0,end:Date.now()+60000,cur:null,lock:false,t:null};D.t=setInterval(drillTick,200);drillNext()}
+function drillNext(){
+  const i=Math.floor(Math.random()*TRIG.length),ans=TRIG[i][1];
+  const pool=shuffle([...new Set(TRIG.map(t=>t[1]).filter(a=>a!==ans))]).slice(0,3);
+  D.cur={i,ans,opts:shuffle([ans,...pool])};D.lock=false;
+  $("#v-drill").innerHTML=`<div class="qhead"><button class="ghost" id="dQuit">Stop</button><div class="clock" style="flex:1"><span id="dClock" style="width:100%"></span></div><span class="mono" style="font-weight:700">${D.score}</span></div>
+  <div class="card"><div class="drill-k">${esc(TRIG[i][0])}</div></div>
+  <div class="drill-opts">${D.cur.opts.map(o=>`<button class="opt" data-a="${esc(o)}">${esc(o)}</button>`).join("")}</div>`;
+  drillTick();
+  $("#dQuit").onclick=drillEnd;
+  document.querySelectorAll(".drill-opts .opt").forEach(b=>b.onclick=()=>{
+    if(D.lock)return;D.lock=true;const ok=b.dataset.a===D.cur.ans;
+    document.querySelectorAll(".drill-opts .opt").forEach(o=>{if(o.dataset.a===D.cur.ans)o.classList.add("right")});
+    if(ok)D.score++;else{D.miss++;b.classList.add("wrong")}
+    setTimeout(()=>{if(D&&Date.now()<D.end)drillNext()},ok?280:900);
+  });
+}
+function drillTick(){if(!D)return;const left=Math.max(0,D.end-Date.now());const c=$("#dClock");if(c)c.style.width=(left/600)+"%";if(left<=0)drillEnd()}
+function drillEnd(){
+  if(!D)return;clearInterval(D.t);const sc=D.score,miss=D.miss;D=null;
+  const newBest=sc>S.best;if(newBest)S.best=sc;if(sc)addXP(sc*3);else save();
+  $("#v-drill").innerHTML=`<div class="card" style="text-align:center"><div class="eyebrow">${newBest?"New personal best":"Time"}</div><div class="big" style="margin:10px 0">${sc}</div>
+  <div style="font-weight:700">+${sc*3} XP</div><p class="muted">${miss} missed · best ${S.best}</p>
+  <div class="stack"><button class="btn wide" id="dAgain">Go again</button><button class="btn soft wide" id="dLab">Study the triggers</button></div></div>`;
+  if(newBest&&sc>0)confetti();
+  $("#dAgain").onclick=drillStart;$("#dLab").onclick=()=>{labTab="trig";show("lab")};
+}
+
+/* ==================== PLAN ==================== */
+let resetArmed=false;
+function renderPlan(){
+  $("#v-plan").innerHTML=`<div><div class="eyebrow">5-day plan</div><h2 style="font-size:26px;margin-top:4px">One domain a day, biggest first</h2>
+  <p class="muted" style="margin:6px 0 0">About 60–90 minutes a night. Days follow the exam weighting, so the most points come first.</p></div>
+  ${PLAN.map((d,di)=>`<div class="card day"><h3>${esc(d.t)}</h3><div class="focus">${esc(d.f)}</div>
+    ${d.i.map((x,xi)=>{const id="d"+di+"-"+xi,on=S.plan.includes(id);return `<label class="check${on?" done":""}" for="${id}"><input type="checkbox" id="${id}" ${on?"checked":""}><span>${esc(x)}</span></label>`}).join("")}</div>`).join("")}
+  <div class="card"><div class="eyebrow" style="margin-bottom:6px">Exam tactics</div>
+    ${TACTICS.map(t=>`<div class="tactic"><b>${esc(t[0])}</b><span>${esc(t[1])}</span></div>`).join("")}</div>
+  <div class="card"><div class="eyebrow" style="margin-bottom:6px">Your data</div>
+    <p class="muted" style="margin:0 0 12px;font-size:14px">Progress is saved only in this browser. No account, nothing sent anywhere.</p>
+    <button class="btn soft wide" id="reset">Reset all progress</button></div>`;
+  document.querySelectorAll(".check input").forEach(c=>c.onchange=()=>{const id=c.id,i=S.plan.indexOf(id);if(c.checked&&i===-1){S.plan.push(id);addXP(5)}else if(!c.checked&&i>-1){S.plan.splice(i,1);save()}c.closest(".check").classList.toggle("done",c.checked)});
+  $("#reset").onclick=e=>{if(!resetArmed){resetArmed=true;e.target.textContent="Tap again to erase everything";e.target.classList.add("bad");setTimeout(()=>{resetArmed=false;if($("#reset")){$("#reset").textContent="Reset all progress";$("#reset").classList.remove("bad")}},3000);return}S=freshState();save();renderTop();resetArmed=false;toast("Progress reset");renderPlan()};
+}
+
+/* ==================== CONFETTI ==================== */
+function confetti(){
+  if(matchMedia("(prefers-reduced-motion: reduce)").matches)return;
+  const cv=$("#confetti"),ctx=cv.getContext("2d"),dpr=window.devicePixelRatio||1;
+  cv.width=innerWidth*dpr;cv.height=innerHeight*dpr;ctx.scale(dpr,dpr);
+  const cs=getComputedStyle(document.documentElement),cols=["--d-sec","--d-res","--d-perf","--d-cost","--accent","--good"].map(v=>cs.getPropertyValue(v).trim());
+  const P=Array.from({length:140},()=>({x:innerWidth/2+(Math.random()-.5)*80,y:innerHeight*0.35,vx:(Math.random()-.5)*14,vy:-Math.random()*13-4,s:Math.random()*7+4,r:Math.random()*6,vr:(Math.random()-.5)*.4,c:cols[Math.floor(Math.random()*cols.length)]}));
+  const t0=performance.now();
+  (function f(t){const el=t-t0;ctx.clearRect(0,0,innerWidth,innerHeight);
+    P.forEach(p=>{p.vy+=.35;p.vx*=.99;p.x+=p.vx;p.y+=p.vy;p.r+=p.vr;ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.r);ctx.globalAlpha=Math.max(0,1-el/2400);ctx.fillStyle=p.c;ctx.fillRect(-p.s/2,-p.s/4,p.s,p.s/2);ctx.restore()});
+    if(el<2400)requestAnimationFrame(f);else ctx.clearRect(0,0,innerWidth,innerHeight)})(t0);
+}
+
+/* ==================== BOOT ==================== */
+renderTop();
+show(location.hash.slice(1)||"home");
+</script>
+</body>
+</html>
